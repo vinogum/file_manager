@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 
 
-def RegisterAPIView(APIView):
+class RegisterAPIView(APIView):
     def post(self, request):
         username = request.data['username']
         password = request.data['password']
@@ -22,7 +22,7 @@ def RegisterAPIView(APIView):
         return Response(data={"token": token.key}, status=status.HTTP_201_CREATED)
 
 
-def LoginAPIView(APIView):
+class LoginAPIView(APIView):
     def post(self, request):
         username = request.data['username']
         password = request.data['password']
@@ -38,5 +38,15 @@ def LoginAPIView(APIView):
         if not user.check_password(password):
             return Response(data={"message": "Invalid password!"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        token, _ = Token.objects.get(user=user)
+        token, _ = Token.objects.get(user=user) # Add checking for token existence
         return Response(data={"token": token.key}, status=status.HTTP_200_OK)
+
+
+def login(request):
+    if request.method == "GET":
+        return render(request, "accounts/login.html")
+
+
+def signup(request):
+    if request.method == "GET":
+        return render(request, "accounts/signup.html")
