@@ -1,4 +1,5 @@
 {% extends "files/index.html" %}
+{% load static %}
 
 {% block content %}
     <h1>{{ file.name }}</h1>
@@ -16,3 +17,5 @@
 
     <a href="#" class="btn btn-secondary mt-3">Back</a>
 {% endblock %}
+
+{% block scripts %}<script src="{% static 'files/get_file.js' %}"></script>{% endblock %}
