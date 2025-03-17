@@ -1,4 +1,5 @@
 {% extends "accounts/accounts.html" %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
@@ -19,4 +20,8 @@
         Don't have an account? <a href="{% url 'signup' %}">Register</a>
     </p>
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'accounts/login.js' %}"></script>
 {% endblock %}

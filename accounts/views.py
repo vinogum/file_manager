@@ -17,9 +17,8 @@ class RegisterAPIView(APIView):
             return Response(data={"message": "Such user already exists!"}, status=status.HTTP_409_CONFLICT)
         
         user = User.objects.create_user(username=username, password=password)
-        token, _ = Token.objects.create(user=user)
         
-        return Response(data={"token": token.key}, status=status.HTTP_201_CREATED)
+        return Response(data={"message": "Successful registration!"}, status=status.HTTP_201_CREATED)
 
 
 class LoginAPIView(APIView):
@@ -38,7 +37,7 @@ class LoginAPIView(APIView):
         if not user.check_password(password):
             return Response(data={"message": "Invalid password!"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        token, _ = Token.objects.get(user=user) # Add checking for token existence
+        token, _ = Token.objects.create(user=user)
         return Response(data={"token": token.key}, status=status.HTTP_200_OK)
 
 
