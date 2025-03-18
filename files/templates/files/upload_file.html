@@ -1,0 +1,24 @@
+{% extends "files/index.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Add New File</h1>
+    <form id="upload-form">
+        <div class="mb-3">
+            <input type="file" class="form-control" id="file" name="file" required>
+        </div>
+        <button id="upload-button" type="button" class="btn btn-primary">Upload</button>
+    </form>
+
+    <h2 class="mt-5">My Files</h2>
+    <ul class="list-group">
+        {% for file in files %}
+            <li class="list-group-item">
+                <a href="/file/{{ file.id }}">{{ file.name }}</a>
+                <span class="badge bg-secondary">{{ file.versions|length }} версий</span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block scripts %}<script src="{% static 'files/upload_file.js' %}"></script>{% endblock %}

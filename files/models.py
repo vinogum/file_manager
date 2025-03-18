@@ -6,12 +6,12 @@ def upload_to(instance, filename):
 
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, null=False, blank=False)
+    url = models.CharField(max_length=255, null=False, blank=False)
 
     class Meta:
-        unique_together = ("user", "name")
+        unique_together = ("user", "url")
 
-class Version(models.Model):
+class FileVersion(models.Model):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     version = models.PositiveIntegerField()
     file_data = models.FileField(upload_to=upload_to)
