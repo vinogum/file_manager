@@ -19,3 +19,13 @@ class FileVersion(models.Model):
 
     class Meta:
         unique_together = ("file", "version")
+
+    def save(self, *args, **kwargs):
+        last_version = FileVersion.objects.filter(file=self.file).order_by("-version").first()
+
+        if last_version:
+            self.version = last_version.version + 1
+        else:
+            self.version = 0
+
+        super().save(*args, **kwargs)
