@@ -27,8 +27,20 @@ def get_file_hash(file):
 
 
 def upload_to(instance, filename):
-    user_folder = f"user_{instance.file.user.id}/{filename}"
-    return user_folder
+    if not hasattr(instance, "file_data"):
+        raise ValueError("The instance has not attribute as 'file_data'!")
+    
+    file_hash = get_file_hash(instance.file_data)
+
+    if file_hash == None:
+        raise ValueError("Failed to get the hash of the file!")
+
+    ext = filename.split('.')[-1]
+    new_filename = f"{file_hash}.{ext}"
+    basedir = f"user_{instance.file.id}/file_{instance.file.id}/"
+
+    return os.path.join(basedir, new_filename)
+
 
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -36,6 +48,7 @@ class File(models.Model):
 
     class Meta:
         unique_together = ("user", "url")
+
 
 class FileVersion(models.Model):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
