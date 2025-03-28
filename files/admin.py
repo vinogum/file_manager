@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import FileVersion, File
 
-# Register your models here.
+# Correct way to register models
+admin.site.register(FileVersion)
+admin.site.register(File)
