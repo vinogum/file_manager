@@ -5,27 +5,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const token = localStorage.getItem('auth_token');
         const formData = new FormData(uploadFormElement);
+        formData.append("file_data", formData.get("file-data"));
+        formData.append("url", formData.get("url"));
+
         fetch('/api/files/', {
             method: 'POST',
-            body: formData,
             headers: {
                 'Authorization': `Token ${token}`,
             },
+            body: formData,
         })
         .then(response => {
             if (!response.ok)
             {
                 return response.json().then(error => {
-                    throw new Error(error.message);
+                    throw new Error(error);
                 });
             }
             return response.json();
         })
         .then(data => {
-            console.log(data.message);
+            console.log(data);
         })
         .catch(error => {
-            console.error(error.message);
+            console.error(error);
         });
     });
 });

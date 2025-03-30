@@ -1,15 +1,18 @@
-from rest_framework import routers
+from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import NestedDefaultRouter
 from .views import FileViewSet
 from django.urls import path, include
 from . import views
 
-router = routers.DefaultRouter()
-router.register(r"files", FileViewSet)
+
+files_router = DefaultRouter()
+files_router.register(r"files", FileViewSet)
 
 urlpatterns = [
-    path("upload/", views.upload_file, name="upload_file"),
-    path("get/", views.get_file, name="get_file"),
+    # Standalone views
+    path("upload/", views.upload, name="upload"),
+    path("download/", views.download, name="download"),
 
-    # API views
-    path("api/", include(router.urls)),
+    # API endpoints (DRF routers)
+    path("api/", include(files_router.urls)),
 ]

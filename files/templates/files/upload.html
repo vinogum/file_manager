@@ -9,7 +9,7 @@
             <input type="text" class="form-control" id="url" name="url" required placeholder="Enter file URL">
         </div>
         <div class="mb-3">
-            <input type="file" class="form-control" id="file" name="file" required>
+            <input type="file" class="form-control" id="file-data" name="file-data" required>
         </div>
         <button id="upload-button" type="button" class="btn btn-primary">Upload</button>
     </form>
@@ -26,5 +26,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'files/upload_file.js' %}"></script>
+    <script src="{% static 'files/upload.js' %}"></script>
 {% endblock %}
