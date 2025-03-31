@@ -6,12 +6,13 @@ from . import views
 
 
 files_router = DefaultRouter()
-files_router.register(r"files", FileViewSet)
+files_router.register(r"files", FileViewSet, basename="file")
 
 urlpatterns = [
     # Standalone views
     path("upload/", views.upload, name="upload"),
     path("download/", views.download, name="download"),
+    path("list/", views.list, name="list"),
 
     # API endpoints (DRF routers)
     path("api/", include(files_router.urls)),

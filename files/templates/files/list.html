@@ -1,0 +1,49 @@
+{% extends 'files/index.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Список файлов</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody id="file-table-body">
+            <!-- Данные будут вставляться сюда -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        token = localStorage.getItem("auth_token");
+        fetch('/api/files/', {
+            method: "GET",
+            headers: {
+                "Authorization": `Token ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById("file-table-body");
+                tableBody.innerHTML = ""; // Очищаем таблицу перед вставкой
+                
+                data.forEach(file => {
+                    const row = `<tr>
+                        <td>${file.id}</td>
+                        <td>${file.user}</td>
+                        <td><a target="_blank">${file.url}</a></td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+
+                console.log(data);
+            })
+            .catch(error => console.error('Ошибка загрузки файлов:', error));
+    });
+</script>
+{% endblock %}

@@ -2,7 +2,7 @@ from ..models import File, FileVersion
 from rest_framework import serializers
 
 
-class WriteFileSerializer(serializers.ModelSerializer):
+class FileWriteSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
     file_data = serializers.FileField(write_only=True)
 
@@ -19,3 +19,10 @@ class WriteFileSerializer(serializers.ModelSerializer):
 
         FileVersion.objects.create(file=file, file_data=file_data)
         return file
+
+
+class FileReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = "__all__"
+        read_only_fields = ("id", "user", "url")
