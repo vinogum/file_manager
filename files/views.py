@@ -18,10 +18,12 @@ class FileViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "create":
             return FileWriteSerializer
-        
+
         elif self.action == "list":
             return FileReadSerializer
-        
+
+        elif self.action == "delete":
+            pass
         return super().get_serializer_class()
 
 
@@ -33,7 +35,7 @@ def download(request):
 def upload(request):
     if request.method == "GET":
         return render(request, "files/upload.html")
-    
+
 
 def list(request):
     if request.method == "GET":

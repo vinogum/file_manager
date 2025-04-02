@@ -13,7 +13,6 @@ urlpatterns = [
     path("upload/", views.upload, name="upload"),
     path("download/", views.download, name="download"),
     path("list/", views.list, name="list"),
-
     # API endpoints (DRF routers)
     path("api/", include(files_router.urls)),
 ]
