@@ -9,6 +9,7 @@
                 <th>ID</th>
                 <th>User ID</th>
                 <th>URL</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="file-table-body">
@@ -31,13 +32,17 @@
             .then(data => {
                 const tableBody = document.getElementById("file-table-body");
                 tableBody.innerHTML = ""; // Очищаем таблицу перед вставкой
-                
+
                 data.forEach(file => {
                     const row = `<tr>
                         <td>${file.id}</td>
                         <td>${file.user}</td>
                         <td><a target="_blank">${file.url}</a></td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-id="${file.id}" onclick="deleteFile(this)">Delete</button>
+                        </td>
                     </tr>`;
+
                     tableBody.innerHTML += row;
                 });
 
@@ -45,5 +50,22 @@
             })
             .catch(error => console.error('Ошибка загрузки файлов:', error));
     });
+
+    function deleteFile(button) {
+    const fileId = button.dataset.id;
+    fetch(`/api/files/${fileId}/`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Token ${localStorage.getItem('auth_token')}`,
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => {
+        if (response.status != 204) { throw new Error("Файл не был удален!"); }
+        console.log('Файл успешно удален');
+        button.closest('tr').remove();
+    })
+    .catch(error => console.error('Ошибка запроса:', error));
+}
 </script>
 {% endblock %}

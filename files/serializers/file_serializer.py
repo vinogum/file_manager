@@ -2,13 +2,18 @@ from ..models import File, FileVersion
 from rest_framework import serializers
 
 
-class FileWriteSerializer(serializers.ModelSerializer):
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ("id", "user", "url")
+
+
+class FileCreateSerializer(FileSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True, required=False)
     file_data = serializers.FileField(write_only=True)
 
-    class Meta:
-        model = File
-        fields = ("user", "url", "file_data")
+    class Meta(FileSerializer.Meta):
+        fields = FileSerializer.Meta.fields + ("file_data",)
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -21,8 +26,11 @@ class FileWriteSerializer(serializers.ModelSerializer):
         return file
 
 
-class FileReadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = File
-        fields = "__all__"
-        read_only_fields = ("id", "user", "url")
+class FileReadSerializer(FileSerializer):
+    class Meta(FileSerializer.Meta):
+        read_only_fields = tuple("__all__")
+
+
+class FileDeleteSerializer(FileSerializer):
+    class Meta(FileSerializer.Meta):
+        fields = ("id",)

@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 from .utilities import upload_to
+import os
+import shutil
+from file_manager import settings
+from django.core.exceptions import ValidationError
 
 
 class File(models.Model):
@@ -10,15 +14,36 @@ class File(models.Model):
     class Meta:
         unique_together = ("user", "url")
 
+    def delete(self, *args, **kwargs):
+        if not self.pk:
+            raise ValidationError("File object must be saved before deletion.")
+
+        user_folder = f"user_{self.user.id}"
+        versions_directory = f"file_{self.id}"
+
+        # Create media/user_id/file_id/ path
+        file_versions_dir = os.path.join(
+            settings.MEDIA_ROOT, user_folder, versions_directory
+        )
+
+        if os.path.isdir(file_versions_dir):
+            shutil.rmtree(file_versions_dir)
+
+        super().delete(*args, **kwargs)
+
 
 class FileVersion(models.Model):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    file = models.ForeignKey(File, on_delete=models.CASCADE, related_name="versions")
     version = models.PositiveIntegerField()
     file_data = models.FileField(upload_to=upload_to)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("file", "version")
+
+    def delete(self, *args, **kwargs):
+        # Add logic for deleting a specific version of a file
+        super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         last_version = (
