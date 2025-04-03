@@ -5,7 +5,8 @@ from rest_framework import serializers
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = ("id", "user", "url")
+        fields = "__all__"
+        read_only_fields = ("id",)
 
 
 class FileCreateSerializer(FileSerializer):
@@ -13,7 +14,7 @@ class FileCreateSerializer(FileSerializer):
     file_data = serializers.FileField(write_only=True)
 
     class Meta(FileSerializer.Meta):
-        fields = FileSerializer.Meta.fields + ("file_data",)
+        fields = tuple(FileSerializer.Meta.fields) + ("file_data",)
 
     def create(self, validated_data):
         user = self.context["request"].user
