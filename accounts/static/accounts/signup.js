@@ -14,16 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .then(response => {
-            if (!response.ok)
-            {
-                return response.json().then(data => {
-                    throw new Error(data.message);
-                });
+            if (!response.ok) {
+                throw new Error("Invalid request!");
             }
             return response.json();
         })
         .then(data => {
-            console.log(data.message);
+            console.log(data);
         })
         .catch(error => {
             console.error(error.message);

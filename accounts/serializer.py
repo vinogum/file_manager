@@ -4,6 +4,8 @@ import pdb
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
         fields = ("id", "username", "password")
@@ -11,8 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserLoginSerializer(UserSerializer):
+    username = serializers.CharField()
+
     def validate(self, attrs):
-        print(f"Полученные данные: {attrs}")
         user = User.objects.filter(username=attrs.get("username")).first()
         if not user:
             raise serializers.ValidationError("Such user does not exist!")
@@ -21,8 +24,7 @@ class UserLoginSerializer(UserSerializer):
         if not is_passwd_valid:
             raise serializers.ValidationError("Invalid password!")
         
-        print(f"Авторизованный пользователь: {user}")
-        attrs["user"] = user 
+        attrs["user"] = user
         return attrs
 
 
@@ -42,7 +44,7 @@ class UserCreateSerializer(UserSerializer):
         validated_data.pop("confirm_password")
 
         username = validated_data["username"]
-        if not User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             raise serializers.ValidationError("Such user already exists!")
         
         user = User.objects.create_user(username=username, password=validated_data["password"])
