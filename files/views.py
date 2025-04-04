@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
@@ -31,15 +32,18 @@ class FileViewSet(viewsets.ModelViewSet):
 
 
 def download(request):
-    if request.method == "GET":
-        return render(request, "files/download.html")
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    return render(request, "files/download.html")
 
 
 def upload(request):
-    if request.method == "GET":
-        return render(request, "files/upload.html")
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    return render(request, "files/upload.html")
 
 
 def list(request):
-    if request.method == "GET":
-        return render(request, "files/list.html")
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    return render(request, "files/list.html")

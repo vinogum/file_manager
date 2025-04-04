@@ -8,4 +8,5 @@ urlpatterns = [
     # API
     path("api/signup/", views.RegisterAPIView.as_view()),
     path("api/login/", views.LoginAPIView.as_view()),
+    path("api/logout/", views.LogoutAPIView.as_view()),
 ]

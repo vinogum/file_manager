@@ -1,7 +1,8 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-from rest_framework.views import Response, status
+from rest_framework.views import APIView, Response, status
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializer import UserCreateSerializer, UserLoginSerializer
 from rest_framework.generics import CreateAPIView
 import pdb
@@ -24,11 +25,25 @@ class LoginAPIView(CreateAPIView):
         return Response(data={"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
 
 
+class LogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()
+            return Response(status=status.HTTP_200_OK)
+        except Token.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 def login(request):
-    if request.method == "GET":
-        return render(request, "accounts/login.html")
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    return render(request, "accounts/login.html")
 
 
 def signup(request):
-    if request.method == "GET":
-        return render(request, "accounts/signup.html")
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    return render(request, "accounts/signup.html")

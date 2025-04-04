@@ -1,10 +1,27 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FileManager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Ensure logout button aligns with other nav items */
+        .navbar-nav .logout-button {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Optionally, add hover effects to the logout button */
+        .navbar-nav .logout-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -18,17 +35,17 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-                    <li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'upload' %}">Upload File</a>
                     </li>
-                    <li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'download' %}">Download File</a>
                     </li>
-                    <li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'list' %}">File List</a>
                     </li>
-                    <li>
-                        <a class="nav-link active" aria-current="page" href="#">Logout</a>
+                    <li class="nav-item">
+                        <button type="button" id="logout-button" class="logout-button">Logout</button>
                     </li>
                 </ul>
             </div>
@@ -41,6 +58,7 @@
         {% endblock %}
     </div>
     {% block scripts %}{% endblock %}
+    <script src="{% static 'accounts/logout.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

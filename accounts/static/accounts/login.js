@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('auth_token')) {
+        window.location.href = "/upload/";
+        return;
+    }
+
     document.getElementById('login-button').addEventListener('click', () => {
         const loginFormElement = document.getElementById('login-form');
         if (!loginFormElement) return;
@@ -23,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(data.user);
             console.log(data.token);
             localStorage.setItem('auth_token', data.token);
+            window.location.href = "/upload/";
         })
         .catch(error => {
             console.error(error.message);
