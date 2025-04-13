@@ -1,15 +1,48 @@
-from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from .serializers.file_serializer import (
+    FileCreateSerializer,
+    FileReadSerializer,
+    FileSerializer,
+    FileDeleteSerializer,
+)
+from .serializers.file_version_serializer import FileVersionSerializer, FileVersionReadSerializer
+from .models import File, FileVersion
+from rest_framework.parsers import MultiPartParser
 
 
 class FileViewSet(viewsets.ModelViewSet):
-    pass
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+    serializer_class = FileSerializer
 
-def get_file(request):
-    if request.method == "GET":
-        return render(request, "files/get_file.html")
+    def get_queryset(self):
+        return File.objects.filter(user=self.request.user)
 
+    def get_serializer_class(self):
+        serializer_map = {
+            "create": FileCreateSerializer,
+            "list": FileReadSerializer,
+            "destroy": FileDeleteSerializer,
+        }
+        return serializer_map.get(self.action, super().get_serializer_class())
+    
 
-def upload_file(request):
-    if request.method == "GET":
-        return render(request, "files/upload_file.html")
+class FileVersionViewSet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+    serializer_class = FileVersionSerializer
+
+    def get_queryset(self):
+        import pdb; pdb.set_trace()
+        file_id = self.kwargs.get("file_pk")
+        return FileVersion.objects.filter(file_id=file_id)
+
+    def get_serializer_class(self):
+        serializer_map = {
+            "list": FileVersionReadSerializer,
+        }
+        return serializer_map.get(self.action, super().get_serializer_class())

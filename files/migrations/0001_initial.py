@@ -16,27 +16,54 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='File',
+            name="File",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('user', 'name')},
+                "unique_together": {("user", "name")},
             },
         ),
         migrations.CreateModel(
-            name='Version',
+            name="Version",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('version', models.PositiveIntegerField()),
-                ('file_data', models.FileField(upload_to=files.models.upload_to)),
-                ('uploaded_at', models.DateTimeField(auto_now_add=True)),
-                ('file', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='files.file')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("version", models.PositiveIntegerField()),
+                ("file_data", models.FileField(upload_to=files.models.upload_to)),
+                ("uploaded_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "file",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="files.file"
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('file', 'version')},
+                "unique_together": {("file", "version")},
             },
         ),
     ]

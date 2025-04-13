@@ -1,61 +1,40 @@
-from django.shortcuts import render
 from rest_framework.views import APIView, Response, status
-from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .serializer import UserCreateSerializer, UserLoginSerializer
+from rest_framework.generics import CreateAPIView
+from rest_framework.parsers import MultiPartParser
 
 
-class RegisterAPIView(APIView):
+class RegisterAPIView(CreateAPIView):
     permission_classes = [AllowAny]
-
-    def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        confirm_password = request.data.get("confirm-password")
-
-        if "" in [username, password, confirm_password]:
-            return Response(data={"message": "Some fields are not filled in!"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        is_passwds_match = (password == confirm_password)
-        if not is_passwds_match:
-            return Response(data={"message": "Passwords do not match!"}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = User.objects.filter(username=username)
-        if user.exists():
-            return Response(data={"message": "Such user already exists!"}, status=status.HTTP_409_CONFLICT)
-        
-        User.objects.create_user(username=username, password=password)
-        
-        return Response(data={"message": "Successful registration!"}, status=status.HTTP_201_CREATED)
+    parser_classes = [MultiPartParser]
+    serializer_class = UserCreateSerializer
 
 
-class LoginAPIView(APIView):
+class LoginAPIView(CreateAPIView):
     permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser]
+    serializer_class = UserLoginSerializer
 
-    def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-
-        if not (username and password):
-            return Response(data={"message": "Some fields are not filled in!"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        user = User.objects.filter(username=username)
-        if not user.exists():
-            return Response(data={"message": "Such user does not exist!"}, status=status.HTTP_404_NOT_FOUND)
-        
-        user = user.first()
-        if not user.check_password(password):
-            return Response(data={"message": "Invalid password!"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data["user"]
         token, _ = Token.objects.get_or_create(user=user)
-        return Response(data={"message": "Successful ", "token": token.key}, status=status.HTTP_200_OK)
+        return Response(
+            data={"token": token.key, "user": serializer.data},
+            status=status.HTTP_200_OK,
+        )
 
 
-def login(request):
-    if request.method == "GET":
-        return render(request, "accounts/login.html")
+class LogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
 
-
-def signup(request):
-    if request.method == "GET":
-        return render(request, "accounts/signup.html")
+    def post(self, request):
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()
+            return Response(status=status.HTTP_200_OK)
+        except Token.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
