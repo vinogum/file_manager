@@ -34,7 +34,6 @@ class FileVersionViewSet(viewsets.ModelViewSet):
     serializer_class = FileVersionSerializer
 
     def get_queryset(self):
-        import pdb; pdb.set_trace()
         file_id = self.kwargs.get("file_pk")
         return FileVersion.objects.filter(file_id=file_id)
 
