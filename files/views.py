@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers.file_serializer import (
     FileCreateSerializer,
@@ -13,7 +12,6 @@ from rest_framework.parsers import MultiPartParser
 
 
 class FileViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
     serializer_class = FileSerializer
@@ -31,7 +29,6 @@ class FileViewSet(viewsets.ModelViewSet):
     
 
 class FileVersionViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser]
     serializer_class = FileVersionSerializer
