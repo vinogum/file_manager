@@ -5,6 +5,7 @@ import os
 import shutil
 from file_manager import settings
 from django.core.exceptions import ValidationError
+from django.db.models import F
 
 
 class File(models.Model):
@@ -46,20 +47,14 @@ class FileVersion(models.Model):
             raise ValidationError("FileVersion object must be saved before deletion.")
 
         # Get the queryset of versions with a greater version number
-        # and decrement their version numbers
         version_gt = FileVersion.objects.filter(
             file=self.file, version__gt=self.version
         )
 
-        if version_gt.exists():
-            for version in version_gt:
-                if version.version > self.version:
-                    version.version -= 1
-
         super().delete(*args, **kwargs)
 
-        for version in version_gt:
-            super(FileVersion, version).save()
+        if version_gt.exists():
+            version_gt.update(version=F("version") - 1)
 
         file = self.file_data.path
         if not os.path.isfile(file):
