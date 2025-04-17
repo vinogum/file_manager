@@ -27,7 +27,7 @@ class FileViewSet(viewsets.ModelViewSet):
             "list": FileReadSerializer,
         }
         return serializer_map.get(self.action, super().get_serializer_class())
-    
+
 
 class FileVersionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
