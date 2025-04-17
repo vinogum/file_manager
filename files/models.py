@@ -42,8 +42,27 @@ class FileVersion(models.Model):
         unique_together = ("file", "version")
 
     def delete(self, *args, **kwargs):
-        # Add logic for deleting a specific version of a file
+        if not self.pk:
+            raise ValidationError("FileVersion object must be saved before deletion.")
+        
+        # Get the queryset of versions with a greater version number
+        # and decrement their version numbers
+        version_gt = FileVersion.objects.filter(file=self.file, version__gt=self.version)
+        
+        if version_gt.exists():
+            for version in version_gt:
+                if version.version > self.version:
+                    version.version -= 1
+
         super().delete(*args, **kwargs)
+
+        for version in version_gt:
+            super(FileVersion, version).save()
+        
+        file = self.file_data.path
+        if not os.path.isfile(file):
+            raise ValidationError(f"Such file does not exist: {file}")
+        os.remove(file)
 
     def save(self, *args, **kwargs):
         last_version = (

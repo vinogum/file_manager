@@ -4,9 +4,11 @@ from .serializers.file_serializer import (
     FileCreateSerializer,
     FileReadSerializer,
     FileSerializer,
-    FileDeleteSerializer,
 )
-from .serializers.file_version_serializer import FileVersionSerializer, FileVersionReadSerializer
+from .serializers.file_version_serializer import (
+    FileVersionSerializer,
+    FileVersionReadSerializer,
+)
 from .models import File, FileVersion
 from rest_framework.parsers import MultiPartParser
 
@@ -23,7 +25,6 @@ class FileViewSet(viewsets.ModelViewSet):
         serializer_map = {
             "create": FileCreateSerializer,
             "list": FileReadSerializer,
-            "destroy": FileDeleteSerializer,
         }
         return serializer_map.get(self.action, super().get_serializer_class())
     
