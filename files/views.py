@@ -11,6 +11,7 @@ from .serializers.file_version_serializer import (
 )
 from .models import File, FileVersion
 from rest_framework.parsers import MultiPartParser
+from django.http import FileResponse
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -43,3 +44,9 @@ class FileVersionViewSet(viewsets.ModelViewSet):
             "list": FileVersionReadSerializer,
         }
         return serializer_map.get(self.action, super().get_serializer_class())
+
+    def retrieve(self, request, *args, **kwargs):
+        version = self.get_object()
+        return FileResponse(
+            version.file_data, as_attachment=True, filename=version.file_data.name
+        )
