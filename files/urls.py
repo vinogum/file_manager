@@ -8,5 +8,4 @@ files_router.register(r"files", FileViewSet, basename="file")
 versions_router = NestedDefaultRouter(files_router, r"files", lookup="file")
 versions_router.register(r"versions", FileVersionViewSet, basename="file-versions")
 
-
 urlpatterns = versions_router.urls + files_router.urls
