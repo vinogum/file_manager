@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .serializers.file_serializers import (
+from files.serializers.file_serializers import (
     FileCreateSerializer,
     FileReadSerializer,
     FileSerializer,
