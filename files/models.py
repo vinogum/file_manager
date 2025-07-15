@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .utilities import upload_to
+from files.utilities import upload_to
 import os
 import shutil
 from file_manager import settings
 from django.core.exceptions import ValidationError
+from django.db.models import F
 
 
 class File(models.Model):
@@ -42,8 +43,23 @@ class FileVersion(models.Model):
         unique_together = ("file", "version")
 
     def delete(self, *args, **kwargs):
-        # Add logic for deleting a specific version of a file
+        if not self.pk:
+            raise ValidationError("FileVersion object must be saved before deletion.")
+
+        # Get the queryset of versions with a greater version number
+        version_gt = FileVersion.objects.filter(
+            file=self.file, version__gt=self.version
+        )
+
         super().delete(*args, **kwargs)
+
+        if version_gt.exists():
+            version_gt.update(version=F("version") - 1)
+
+        file = self.file_data.path
+        if not os.path.isfile(file):
+            raise ValidationError(f"Such file does not exist: {file}")
+        os.remove(file)
 
     def save(self, *args, **kwargs):
         last_version = (

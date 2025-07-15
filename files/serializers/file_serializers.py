@@ -1,4 +1,4 @@
-from ..models import File, FileVersion
+from files.models import File, FileVersion
 from rest_framework import serializers
 
 
@@ -30,9 +30,3 @@ class FileCreateSerializer(FileSerializer):
 class FileReadSerializer(FileSerializer):
     class Meta(FileSerializer.Meta):
         read_only_fields = FileSerializer.Meta.fields
-
-
-class FileDeleteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = File
-        fields = ("id",)

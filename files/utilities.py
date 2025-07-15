@@ -10,7 +10,7 @@ def upload_to(instance, filename):
 
     file_hash = get_file_hash(instance.file_data)
 
-    if file_hash == None:
+    if file_hash is None:
         raise ValueError("Failed to get the hash of the file!")
 
     ext = filename.split(".")[-1]
