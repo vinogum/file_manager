@@ -15,14 +15,12 @@ This is a Django-based REST API for a file management system. It allows users to
 
 The project has two main Django apps: `accounts` and `files`. [cite: 3, 4]
 
-file_manager/
-├── accounts/ # Handles user registration and authentication
-├── files/ # Handles file and version management
-├── file_manager/ # Main Django project settings
-├── media/ # Stores uploaded files
-├── Dockerfile # Docker configuration
-└── Makefile # Helper commands
-
+- `accounts/` — Handles user registration and authentication  
+- `files/` — Handles file and version management  
+- `file_manager/` — Main Django project settings  
+- `media/` — Stores uploaded files  
+- `Dockerfile` — Docker configuration  
+- `Makefile` — Helper commands  
 
 ## API Endpoints
 
