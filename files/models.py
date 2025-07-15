@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .utilities import upload_to
+from files.utilities import upload_to
 import os
 import shutil
 from file_manager import settings

@@ -1,4 +1,4 @@
-from ..models import FileVersion
+from files.models import FileVersion
 from rest_framework import serializers
 
 

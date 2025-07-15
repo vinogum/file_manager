@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from file_manager import settings
-from .models import File, FileVersion
+from files.models import File, FileVersion
 from django.core.files.base import File as DjangoFile
 import shutil
 import os
