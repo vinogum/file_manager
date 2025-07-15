@@ -10,6 +10,6 @@ versions_router = NestedDefaultRouter(files_router, r"files", lookup="file")
 versions_router.register(r"versions", FileVersionViewSet, basename="file-versions")
 
 urlpatterns = [
-    path('', include(files_router.urls)),
-    path('', include(versions_router.urls)),
+    path("", include(files_router.urls)),
+    path("", include(versions_router.urls)),
 ]
